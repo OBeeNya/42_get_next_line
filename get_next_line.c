@@ -6,24 +6,33 @@
 /*   By: baubigna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 13:55:45 by baubigna          #+#    #+#             */
-/*   Updated: 2021/12/04 17:02:37 by baubigna         ###   ########.fr       */
+/*   Updated: 2021/12/06 17:20:18 by baubigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+char	*get_line(int fd, char *next_line)
 {
-	static ssize_t	bytes_read;
-	char			*buf;
+	char	*buf;
+	ssize_t	bytes;
 
-	if (fd == -1)
-		return (NULL);
 	buf = malloc(BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
-	while (!is_line(buf))
-		bytes_read = read_bytes(fd, buf, BUFFER_SIZE);
-	get_line_len(buf);
+	while (!ft_strchr(buf, '\n'))
+	{
+		bytes = read(fd, buf, BUFFER_SIZE);
+	}
+	return (buf);
+}
 
+char	*get_next_line(int fd)
+{
+	char		*line;
+	static char	*next_line;
+
+	next_line = "\0";
+	next_line = get_line(fd, next_line);
+	return (next_line);
 }

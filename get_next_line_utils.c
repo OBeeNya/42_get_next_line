@@ -6,40 +6,82 @@
 /*   By: baubigna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 14:01:08 by baubigna          #+#    #+#             */
-/*   Updated: 2021/12/04 17:02:42 by baubigna         ###   ########.fr       */
+/*   Updated: 2021/12/06 17:20:16 by baubigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "get_next_line.h"
+#include <stdio.h>
 
-ssize_t	read_bytes(int fd, char *buf, size_t buffer_size)
+size_t	ft_strlen(const char *s)
 {
-	static ssize_t	bytes_read;
+	size_t	i;
 
-	bytes_read += read(fd, buf, buffer_size);
-	return (bytes_read);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }
 
-int	is_line(char *buf)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	while (*buf)
+	size_t	a;
+	char	*r;
+	int		i;
+	int		j;
+
+	if (!s1 || !s2)
+		return (NULL);
+	a = ft_strlen(s1) + ft_strlen(s2);
+	r = malloc(a + 1);
+	if (!r)
+		return (NULL);
+	i = 0;
+	while (s1[i])
 	{
-		if (*buf == '\n')
-			return (1);
-		buf++;
+		r[i] = s1[i];
+		i++;
 	}
-	return (0);
+	j = 0;
+	while (s2[j])
+	{
+		r[i + j] = s2[j];
+		j++;
+	}
+	r[i + j] = '\0';
+	return (r);
 }
 
-size_t	get_line_len(char *buf)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	len;
+	while (*s != (char)c)
+		if (!*s++)
+			return (0);
+	return ((char *)s);
+}
 
-	len = 0;
-	while (buf[len])
+char	*copy_line(char *line)
+{
+	char 	*cpy;
+	size_t	l;
+	size_t	i;
+
+	l = 0;
+	while (line[l])
 	{
-		if (buf[len++] == '\n')
-			return (len);
+		if (line[++l] == '\n')
+			break ;
+		l++;
 	}
-	return (0);
+	cpy = malloc(l + 1);
+	if (!cpy)
+		return (NULL);
+	i = 0;
+	while (i < l)
+	{
+		cpy[i] = line[i];
+		i++;
+	}
+	cpy[i] = '\0';
+	return (cpy);
 }

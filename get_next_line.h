@@ -6,7 +6,7 @@
 /*   By: baubigna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 13:56:32 by baubigna          #+#    #+#             */
-/*   Updated: 2021/12/04 17:02:32 by baubigna         ###   ########.fr       */
+/*   Updated: 2021/12/06 17:20:13 by baubigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 # include <stdlib.h>
 
 char	*get_next_line(int fd);
-ssize_t	read_bytes (int fd, char *buf, size_t buffer_size);
-int		is_line(char *buf);
-size_t	get_line_len(char *buf);
+size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strchr(const char *s, int c);
+char	*copy_line(char *line);
 
 #endif
