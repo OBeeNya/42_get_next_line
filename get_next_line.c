@@ -5,34 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: baubigna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/04 13:55:45 by baubigna          #+#    #+#             */
-/*   Updated: 2021/12/06 17:20:18 by baubigna         ###   ########.fr       */
+/*   Created: 2021/12/08 11:54:53 by baubigna          #+#    #+#             */
+/*   Updated: 2021/12/08 18:53:34 by baubigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_line(int fd, char *next_line)
+void	free_ptr(char **ptr)
 {
-	char	*buf;
-	ssize_t	bytes;
-
-	buf = malloc(BUFFER_SIZE + 1);
-	if (!buf)
-		return (NULL);
-	while (!ft_strchr(buf, '\n'))
+	if (*ptr != NULL)
 	{
-		bytes = read(fd, buf, BUFFER_SIZE);
+		free(*ptr);
+		ptr = NULL;
 	}
-	return (buf);
+}
+
+char	*join_line(int nl_pos, char **wip)
+{
+	char	*ret;
+	char	*temp;
+
+	temp = NULL;
+	if (nl_pos < 1)
+	{
+		if (**wip == '\0')
+		{
+			free(*wip);
+			*wip = NULL;
+			return (NULL);
+		}
+		ret = *wip;
+		*wip = NULL;
+		return (ret);
+	}
+	temp = ft_substr(*wip, nl_pos, BUFFER_SIZE);
+	ret = *wip;
+	ret[nl_pos] = '\0' ;
+	*wip = temp;
+	return (ret);
+}
+
+char	*read_line(int fd, char **wip, char *buf)
+{
+	ssize_t	bytes_read;
+	char	*temp;
+	char	*nl;
+
+	nl = ft_strchr(*wip, '\n');
+	temp = NULL;
+	bytes_read = 0;
+	while (nl == NULL)
+	{
+		bytes_read = read(fd, buf, BUFFER_SIZE);
+		if (bytes_read < 1)
+			return (join_line(bytes_read, wip));
+		buf[bytes_read] = '\0';
+		temp = ft_strjoin(*wip, buf);
+		free_ptr(wip);
+		*wip = temp;
+		nl = ft_strchr(*wip, '\n');
+	}
+	return (join_line(nl - *wip + 1, wip));
 }
 
 char	*get_next_line(int fd)
 {
+	static char	*wip[12288 + 1];
+	char		*buf;
 	char		*line;
-	static char	*next_line;
 
-	next_line = "\0";
-	next_line = get_line(fd, next_line);
-	return (next_line);
+	if (fd < 0 || BUFFER_SIZE < 1 || fd > 12288)
+		return (NULL);
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	if (!wip[fd])
+		wip[fd] = ft_strdup("");
+	line = read_line(fd, &wip[fd], buf);
+	free_ptr(&buf);
+	return (line);
 }
