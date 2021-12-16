@@ -1,3 +1,3 @@
 # 42_get_next_line
 
-Que ce soit un fichier, stdin, ou même une connexion réseau, vous aurez toujours besoin d'un moyen de lire le contenu ligne par ligne.
+May it be a file, stdin, or even a network connection, you'll always need a way to read the content line by line.
